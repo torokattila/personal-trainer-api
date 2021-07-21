@@ -84,6 +84,42 @@ app.post("/api/registeruser", (req, res) => {
 	}
 });
 
+app.post("/api/loginuser", (req, res) => {
+	const { username, password } = req.body;
+	const sqlSelectUser = "SELECT * FROM user WHERE username = ?;";
+
+	if (username === "" && password === "") {
+		res.json({ error: "You have to fill both username and password fields!" });
+	} else if (username === "" && password !== "") {
+		res.json({ error: "Please fill the username field!" });
+	} else if (username !== "" && password === "") {
+		res.json({ error: "Please fill the password field!" });
+	} else {
+		db.query(sqlSelectUser, username, (selectError, selectResult) => {
+			if (selectError) {
+				console.log(selectError);
+				res.json({ error: selectError });
+			}
+
+			if (selectResult.length > 0) {
+				bcrypt.compare(password, selectResult[0].password, (compareError, compareResponse) => {
+					if (!compareResponse) {
+						res.json({ error: "Wrong username or password!" });
+					} else if (compareResponse) {
+						res.json({
+							username: username,
+							userId: selectResult[0].id
+						});
+					}
+				});
+			} else {
+				res.json({ error: "There is no user with this username!" });
+				console.log("There is no user with this username!");
+			}
+		});
+	}
+});
+
 app.listen(PORT, () => {
 	console.log(`App is listening on PORT ${PORT}`);
 });
