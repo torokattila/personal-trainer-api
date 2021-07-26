@@ -193,7 +193,6 @@ app.post("/api/update_exercise", (req, res) => {
 
 app.post("/api/get_last_exercise", (req, res) => {
 	const { userId } = req.body;
-	console.log(req.body);
 	const selectExerciseQuery =
 		"SELECT exercise_name FROM exercises WHERE user_id = ?";
 
