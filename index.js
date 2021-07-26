@@ -120,7 +120,7 @@ app.post("/api/loginuser", (req, res) => {
 					password,
 					selectResult[0].password,
 					(compareError, compareResponse) => {
-						if (!compareResponse) {
+						if (compareError) {
 							res.json({ error: "Wrong username or password!" });
 						} else if (compareResponse) {
 							res.json({
