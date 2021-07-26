@@ -22,7 +22,7 @@ const db = mysql.createPool({
 
 setInterval(function() {
 	db.query("SELECT 1");
-});
+}, 4500);
 
 db.query("USE " + db.database);
 
